@@ -2,13 +2,13 @@ package com.bridgelabz;
 
 import java.util.Objects;
 
-public class QuantityWeight {
+public class Quantity<U extends IMeasurable> {
 
     private final double value;
-    private final WeightUnit unit;
+    private final U unit;
     private static final double EPSILON = 1e-4;
 
-    public QuantityWeight(double value, WeightUnit unit) {
+    public Quantity(double value, U unit) {
 
         if (unit == null)
             throw new IllegalArgumentException("Unit cannot be null.");
@@ -24,7 +24,7 @@ public class QuantityWeight {
         return value;
     }
 
-    public WeightUnit getUnit() {
+    public U getUnit() {
         return unit;
     }
 
@@ -32,9 +32,7 @@ public class QuantityWeight {
         return unit.convertToBaseUnit(value);
     }
 
-    // --------------------
-    // Equality
-    // --------------------
+    // ------------------- EQUALITY -------------------
 
     @Override
     public boolean equals(Object obj) {
@@ -45,7 +43,11 @@ public class QuantityWeight {
         if (obj == null || getClass() != obj.getClass())
             return false;
 
-        QuantityWeight other = (QuantityWeight) obj;
+        Quantity<?> other = (Quantity<?>) obj;
+
+        // Prevent cross-category comparison
+        if (this.unit.getClass() != other.unit.getClass())
+            return false;
 
         return Math.abs(this.toBaseUnit() - other.toBaseUnit()) < EPSILON;
     }
@@ -55,11 +57,9 @@ public class QuantityWeight {
         return Objects.hash(toBaseUnit());
     }
 
-    // --------------------
-    // Conversion
-    // --------------------
+    // ------------------- CONVERSION -------------------
 
-    public QuantityWeight convertTo(WeightUnit targetUnit) {
+    public Quantity<U> convertTo(U targetUnit) {
 
         if (targetUnit == null)
             throw new IllegalArgumentException("Target unit cannot be null.");
@@ -67,37 +67,31 @@ public class QuantityWeight {
         double baseValue = this.toBaseUnit();
         double converted = targetUnit.convertFromBaseUnit(baseValue);
 
-        return new QuantityWeight(converted, targetUnit);
+        return new Quantity<>(converted, targetUnit);
     }
 
-    // --------------------
-    // Addition (Implicit Target)
-    // --------------------
+    // ------------------- ADDITION -------------------
 
-    public QuantityWeight add(QuantityWeight other) {
+    public Quantity<U> add(Quantity<U> other) {
         return add(other, this.unit);
     }
 
-    // --------------------
-    // Addition (Explicit Target)
-    // --------------------
-
-    public QuantityWeight add(QuantityWeight other, WeightUnit targetUnit) {
+    public Quantity<U> add(Quantity<U> other, U targetUnit) {
 
         if (other == null)
-            throw new IllegalArgumentException("Other weight cannot be null.");
+            throw new IllegalArgumentException("Other quantity cannot be null.");
 
         if (targetUnit == null)
             throw new IllegalArgumentException("Target unit cannot be null.");
 
         double sumBase = this.toBaseUnit() + other.toBaseUnit();
-        double resultValue = targetUnit.convertFromBaseUnit(sumBase);
+        double result = targetUnit.convertFromBaseUnit(sumBase);
 
-        return new QuantityWeight(resultValue, targetUnit);
+        return new Quantity<>(result, targetUnit);
     }
 
     @Override
     public String toString() {
-        return "Quantity(" + value + ", " + unit + ")";
+        return "Quantity(" + value + ", " + unit.getUnitName() + ")";
     }
 }
