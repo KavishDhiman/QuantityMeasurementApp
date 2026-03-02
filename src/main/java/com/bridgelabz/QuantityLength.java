@@ -103,6 +103,37 @@ public final class QuantityLength {
     /**
      * Equality based on normalized base unit value.
      */
+
+    /**
+     * Adds two QuantityLength objects and returns the result
+     * in the explicitly specified target unit.
+     */
+    public QuantityLength add(QuantityLength other, LengthUnit targetUnit) {
+
+        if (other == null) {
+            throw new IllegalArgumentException("Second operand cannot be null.");
+        }
+
+        if (targetUnit == null) {
+            throw new IllegalArgumentException("Target unit cannot be null.");
+        }
+
+        if (!Double.isFinite(this.value) || !Double.isFinite(other.value)) {
+            throw new IllegalArgumentException("Values must be finite numbers.");
+        }
+
+        // Convert both to base unit (feet)
+        double thisInFeet = this.toBaseUnit();
+        double otherInFeet = other.toBaseUnit();
+
+        // Add in base unit
+        double sumInFeet = thisInFeet + otherInFeet;
+
+        // Convert to target unit
+        double resultValue = sumInFeet / targetUnit.getConversionFactor();
+
+        return new QuantityLength(resultValue, targetUnit);
+    }
     @Override
     public boolean equals(Object obj) {
 

@@ -181,4 +181,58 @@ class QuantityLengthTest {
         assertThrows(IllegalArgumentException.class,
                 () -> q1.add(null));
     }
+    @Test
+    void testAddition_ExplicitTargetUnit_Feet() {
+        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.FEET);
+        QuantityLength q2 = new QuantityLength(12.0, LengthUnit.INCH);
+
+        QuantityLength result = q1.add(q2, LengthUnit.FEET);
+
+        assertEquals(new QuantityLength(2.0, LengthUnit.FEET), result);
+    }
+    @Test
+    void testAddition_ExplicitTargetUnit_Inches() {
+        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.FEET);
+        QuantityLength q2 = new QuantityLength(12.0, LengthUnit.INCH);
+
+        QuantityLength result = q1.add(q2, LengthUnit.INCH);
+
+        assertEquals(new QuantityLength(24.0, LengthUnit.INCH), result);
+    }
+    @Test
+    void testAddition_ExplicitTargetUnit_Yards() {
+        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.FEET);
+        QuantityLength q2 = new QuantityLength(12.0, LengthUnit.INCH);
+
+        QuantityLength result = q1.add(q2, LengthUnit.YARDS);
+
+        assertEquals(new QuantityLength(0.6666666667, LengthUnit.YARDS), result);
+    }
+    @Test
+    void testAddition_ExplicitTargetUnit_Centimeters() {
+        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.INCH);
+        QuantityLength q2 = new QuantityLength(1.0, LengthUnit.INCH);
+
+        QuantityLength result = q1.add(q2, LengthUnit.CENTIMETERS);
+
+        assertEquals(new QuantityLength(5.08, LengthUnit.CENTIMETERS), result);
+    }
+    @Test
+    void testAddition_ExplicitTargetUnit_NullTargetUnit() {
+        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.FEET);
+        QuantityLength q2 = new QuantityLength(12.0, LengthUnit.INCH);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> q1.add(q2, null));
+    }
+    @Test
+    void testAddition_ExplicitTargetUnit_Commutativity() {
+        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.FEET);
+        QuantityLength q2 = new QuantityLength(12.0, LengthUnit.INCH);
+
+        QuantityLength r1 = q1.add(q2, LengthUnit.YARDS);
+        QuantityLength r2 = q2.add(q1, LengthUnit.YARDS);
+
+        assertEquals(r1, r2);
+    }
 }
