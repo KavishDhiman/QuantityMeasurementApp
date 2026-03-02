@@ -58,7 +58,32 @@ public final class QuantityLength {
         double valueInFeet = source.toFeet(value);
         return valueInFeet / target.getConversionFactor();
     }
+    /**
+     * Adds another QuantityLength to this one.
+     * Result is returned in the unit of this object.
+     */
+    public QuantityLength add(QuantityLength other) {
 
+        if (other == null) {
+            throw new IllegalArgumentException("Second operand cannot be null.");
+        }
+
+        if (!Double.isFinite(other.value)) {
+            throw new IllegalArgumentException("Invalid value in second operand.");
+        }
+
+        // Convert both to base unit (feet)
+        double thisInFeet = this.toBaseUnit();
+        double otherInFeet = other.toBaseUnit();
+
+        // Add in base unit
+        double sumInFeet = thisInFeet + otherInFeet;
+
+        // Convert back to this object's unit
+        double resultValue = sumInFeet / this.unit.getConversionFactor();
+
+        return new QuantityLength(resultValue, this.unit);
+    }
     /**
      * Instance conversion method.
      * Returns new immutable QuantityLength object.
