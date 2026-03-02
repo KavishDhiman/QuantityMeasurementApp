@@ -1,33 +1,27 @@
 package com.bridgelabz;
 
-/**
- * Enum representing supported length units.
- * Each unit stores conversion factor relative to base unit (FEET).
- */
 public enum LengthUnit {
 
     FEET(1.0),
     INCH(1.0 / 12.0),
     YARDS(3.0),
-    CENTIMETERS(0.393701 / 12.0); // 1 cm = 0.393701 inches
+    CENTIMETERS(1.0 / 30.48);
 
-    private final double conversionFactorToFeet;
+    private final double conversionFactor;  // ✅ MUST EXIST
 
-    LengthUnit(double conversionFactorToFeet) {
-        this.conversionFactorToFeet = conversionFactorToFeet;
+    LengthUnit(double conversionFactor) {
+        this.conversionFactor = conversionFactor;
     }
 
-    /**
-     * Converts given value of this unit into feet.
-     */
-    public double toFeet(double value) {
-        return value * conversionFactorToFeet;
-    }
-
-    /**
-     * Returns conversion factor relative to feet.
-     */
     public double getConversionFactor() {
-        return conversionFactorToFeet;
+        return conversionFactor;
+    }
+
+    public double convertToBaseUnit(double value) {
+        return value * conversionFactor;
+    }
+
+    public double convertFromBaseUnit(double baseValue) {
+        return baseValue / conversionFactor;
     }
 }
