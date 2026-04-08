@@ -1,12 +1,14 @@
-package com.bridgelabz;
+package com.bridgelabz.integration;
 
 import com.bridgelabz.controller.QuantityMeasurementController;
 import com.bridgelabz.dto.QuantityDTO;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class QuantityMeasurementApp {
+public class QuantityIntegrationTest {
 
-    public static void main(String[] args) {
-
+    @Test
+    void givenFullFlow_whenAdd_shouldWorkEndToEnd() {
         QuantityMeasurementController controller = new QuantityMeasurementController();
 
         QuantityDTO q1 = new QuantityDTO();
@@ -17,7 +19,8 @@ public class QuantityMeasurementApp {
         q2.value = 12;
         q2.unit = "INCH";
 
-        System.out.println("Equal: " + controller.compare(q1, q2));
-        System.out.println("Sum: " + controller.add(q1, q2));
+        double result = controller.add(q1, q2);
+
+        assertEquals(24, result);
     }
 }
