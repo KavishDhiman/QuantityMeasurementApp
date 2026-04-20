@@ -1,6 +1,13 @@
 package com.app.quantitymeasurement.dto;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class QuantityDTO {
-    public double value;
-    public String unit;
+    private double value;
+    private String unit;
 }
