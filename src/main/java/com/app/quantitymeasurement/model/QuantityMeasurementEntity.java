@@ -1,20 +1,45 @@
 package com.app.quantitymeasurement.model;
 
-import java.io.Serializable;
+import jakarta.persistence.*;
+import lombok.*;
 
-public class QuantityMeasurementEntity implements Serializable {
-    public double resultValue;
-    public String operation;
-    public boolean isError;
-    public String errorMessage;
+import java.time.LocalDateTime;
 
-    public QuantityMeasurementEntity(double resultValue, String operation) {
-        this.resultValue = resultValue;
-        this.operation = operation;
-    }
+@Entity
+@Table(name = "quantity_history")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class QuantityMeasurementEntity {
 
-    public QuantityMeasurementEntity(String errorMessage) {
-        this.isError = true;
-        this.errorMessage = errorMessage;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String operation;
+
+    @Column(nullable = false)
+    private double resultValue;
+
+    @Column
+    private String unit1;
+
+    @Column
+    private double value1;
+
+    @Column
+    private String unit2;
+
+    @Column
+    private double value2;
+
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
     }
 }
